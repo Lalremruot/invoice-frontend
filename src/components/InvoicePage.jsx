@@ -70,37 +70,62 @@ const InvoicePage = () => {
       </div>
 
       <div className="pt-5">
-        <div className="overflow-x-hidden"> {/* prevent horizontal scroll */}
-  <table className="min-w-full table-auto border-gray-300 md:table-fixed">
-    <thead>
-      <tr>
-        <th className="border-b text-md font-mono border-gray-300 font-medium py-4 px-2 text-start w-20">SL NO.</th>
-        <th className="border-b text-md font-mono border-gray-300 font-medium py-4 px-2 text-start max-w-[150px] break-words whitespace-normal">
-          DESCRIPTION
-        </th>
-        <th className="border-b text-md font-mono border-gray-300 font-medium py-4 px-2 text-start w-20">QUANTITY</th>
-        <th className="border-b text-md font-mono border-gray-300 font-medium py-4 px-2 text-start w-20">PRICE</th>
-      </tr>
-    </thead>
-    <tbody>
-      {invoiceData.items &&
-        invoiceData.items.map((item, index) => (
-          <tr key={index}>
-            <td className="border-b text-sm font-mono border-gray-300 py-4 px-2">{index + 1}</td>
-            <td className="border-b text-sm font-mono border-gray-300 py-4 px-2 max-w-[150px] break-words whitespace-normal">
-              {item.itemName}
-            </td>
-            <td className="border-b text-sm font-mono border-gray-300 py-4 px-2">{item.quantity}</td>
-            <td className="border-b text-sm font-mono border-gray-300 py-4 px-2">{item.price}</td>
-          </tr>
-        ))}
-    </tbody>
-  </table>
-</div>
-
+        <div className="overflow-x-hidden">
+          {" "}
+          {/* prevent horizontal scroll */}
+          <table className="min-w-full table-auto border-gray-300 md:table-fixed">
+            <thead>
+              <tr>
+                <th className="border-b text-md font-mono border-gray-300 font-medium py-4 px-2 text-start w-20">
+                  SL NO.
+                </th>
+                <th className="border-b text-md font-mono border-gray-300 font-medium py-4 px-2 text-start max-w-[150px] break-words whitespace-normal">
+                  DESCRIPTION
+                </th>
+                <th className="border-b text-md font-mono border-gray-300 font-medium py-4 px-2 text-start w-20">
+                  QUANTITY
+                </th>
+                <th className="border-b text-md font-mono border-gray-300 font-medium py-4 px-2 text-start w-20">
+                  PRICE
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {invoiceData.items &&
+                invoiceData.items.map((item, index) => (
+                  <tr key={index}>
+                    <td className="border-b text-sm font-mono border-gray-300 py-4 px-2">
+                      {index + 1}
+                    </td>
+                    <td className="border-b text-sm font-mono border-gray-300 py-4 px-2 max-w-[150px] break-words whitespace-normal">
+                      {item.itemName}
+                    </td>
+                    <td className="border-b text-sm font-mono border-gray-300 py-4 px-2">
+                      {item.quantity}
+                    </td>
+                    <td className="border-b text-sm font-mono border-gray-300 py-4 px-2">
+                      {item.price}
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
 
         <div className="flex justify-end w-full pt-8">
           <div className="flex w-full items-center flex-col justify-between">
+            <div className="py-3 flex items-center gap-20 justify-between w-full">
+              <h2 className="font-normal text-gray-700 font-mono">
+                Material Cost
+              </h2>
+              <p>₹{invoiceData.materialCost}</p>
+            </div>
+            <div className="py-3 flex items-center gap-20 justify-between w-full">
+              <h2 className="font-normal text-gray-700 font-mono">
+                Labour Cost
+              </h2>
+              <p>₹{invoiceData.labourCost}</p>
+            </div>
             <div className="py-3 flex items-center gap-20 justify-between w-full">
               <h2 className="font-normal text-gray-700 font-mono">Subtotal</h2>
               <p>₹{invoiceData.totalAmount}</p>
@@ -112,7 +137,10 @@ const InvoicePage = () => {
             <div className="py-3 flex items-center gap-20 justify-between w-full border-b border-gray-300">
               <h2 className="font-semibold text-gray-800 font-mono">Total</h2>
               <p className="font-semibold text-gray-800 font-mono">
-                ₹{invoiceData.totalAmount + invoiceData.tax}
+                ₹
+                {(parseFloat(invoiceData.totalAmount) || 0) +
+                  (parseFloat(invoiceData.materialCost) || 0) +
+                  (parseFloat(invoiceData.labourCost) || 0)}
               </p>
             </div>
           </div>

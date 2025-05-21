@@ -11,6 +11,8 @@ const CreateInvoice = () => {
     contactNumber: "",
     shopAddress: "",
     customerName: "",
+    materialCost: "",
+    labourCost: "",
     customerPhone: "",
     items: [
       {
@@ -25,25 +27,26 @@ const CreateInvoice = () => {
   });
 
   const resetForm = () => {
-  setFormData({
-    shopName: "",
-    contactNumber: "",
-    shopAddress: "",
-    customerName: "",
-    customerPhone: "",
-    items: [
-      {
-        itemName: "",
-        quantity: "",
-        price: "",
-      },
-    ],
-    tax: "",
-    totalAmount: 0,
-    due: "",
-  });
-};
-
+    setFormData({
+      shopName: "",
+      contactNumber: "",
+      shopAddress: "",
+      materialCost: "",
+      labourCost: "",
+      customerName: "",
+      customerPhone: "",
+      items: [
+        {
+          itemName: "",
+          quantity: "",
+          price: "",
+        },
+      ],
+      tax: "",
+      totalAmount: 0,
+      due: "",
+    });
+  };
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -52,19 +55,30 @@ const CreateInvoice = () => {
     const newItems = [...formData.items];
     newItems[index][field] = value;
 
-    // Update formData and recalculate totalAmount
-    const updatedFormData = { ...formData, items: newItems };
-    updatedFormData.totalAmount = calculateTotal(newItems);
+    const updatedFormData = {
+      ...formData,
+      items: newItems,
+      totalAmount: calculateTotal(
+        newItems,
+        formData.materialCost,
+        formData.labourCost
+      ),
+    };
+
     setFormData(updatedFormData);
   };
 
-  const calculateTotal = (items) => {
-    return items.reduce((total, item) => {
+  const calculateTotal = (items, materialCost, labourCost) => {
+    const itemsTotal = items.reduce((total, item) => {
       const price = parseFloat(item.price) || 0;
       const quantity = parseFloat(item.quantity) || 0;
-      // const tax = parseFloat(item.tax) || 0;
       return total + price * quantity;
     }, 0);
+
+    const matCost = parseFloat(materialCost) || 0;
+    const labCost = parseFloat(labourCost) || 0;
+
+    return itemsTotal + matCost + labCost;
   };
 
   const addItem = () => {
@@ -75,32 +89,34 @@ const CreateInvoice = () => {
     setFormData({
       ...formData,
       items: newItems,
-      totalAmount: calculateTotal(newItems),
+      totalAmount: calculateTotal(
+        newItems,
+        formData.materialCost,
+        formData.labourCost
+      ),
     });
   };
 
-  
-const handleSubmit = async (e) => {
-  setLoading(true);
-  e.preventDefault();
-  try {
-    const response = await axios.post(`${BASE_API}/api/invoice`, formData);
-    console.log("Invoice created successfully:", response.data);
-resetForm();
-    if (response) {
-      toast.success("Invoice created successfully", { autoClose: 1200 });
-      setTimeout(() => {
-        navigate("/invoice-page"); // ✅ pass data here
-      }, 2000);
+  const handleSubmit = async (e) => {
+    setLoading(true);
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${BASE_API}/api/invoice`, formData);
+      console.log("Invoice created successfully:", response.data);
+      resetForm();
+      if (response) {
+        toast.success("Invoice created successfully", { autoClose: 1200 });
+        setTimeout(() => {
+          navigate("/invoice-page"); // ✅ pass data here
+        }, 2000);
+      }
+    } catch (error) {
+      console.error("Error creating invoice:", error);
+      alert("Error creating invoice");
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Error creating invoice:", error);
-    alert("Error creating invoice");
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   return (
     <div className="bg-gray-100 flex items-center justify-center px-3 py-5">
@@ -128,7 +144,7 @@ resetForm();
           <div className="flex flex-col gap-1">
             <label>Contact Number</label>
             <input
-            inputMode="numeric"
+              inputMode="numeric"
               type="text"
               value={formData.contactNumber}
               onChange={(e) =>
@@ -170,11 +186,59 @@ resetForm();
             </label>
             <input
               inputMode="numeric"
-              type="text"
+              type="number"
               value={formData.customerPhone}
               onChange={(e) =>
                 setFormData({ ...formData, customerPhone: e.target.value })
               }
+              className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-1.5 w-full"
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label>
+              Material cost{" "}
+              <span className="text-red-500 italic text-sm">(if any)</span>
+            </label>
+            <input
+              inputMode="numeric"
+              type="number"
+              value={formData.materialCost}
+              onChange={(e) => {
+                const value = e.target.value;
+                setFormData((prev) => ({
+                  ...prev,
+                  materialCost: value,
+                  totalAmount: calculateTotal(
+                    prev.items,
+                    value,
+                    prev.labourCost
+                  ),
+                }));
+              }}
+              className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-1.5 w-full"
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label>
+              Labour cost{" "}
+              <span className="text-red-500 italic text-sm">(if any)</span>
+            </label>
+            <input
+              inputMode="numeric"
+              type="number"
+              value={formData.labourCost}
+              onChange={(e) => {
+                const value = e.target.value;
+                setFormData((prev) => ({
+                  ...prev,
+                  labourCost: value,
+                  totalAmount: calculateTotal(
+                    prev.items,
+                    prev.materialCost,
+                    value
+                  ),
+                }));
+              }}
               className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-1.5 w-full"
             />
           </div>
@@ -198,7 +262,7 @@ resetForm();
                     className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-1.5"
                   />
                   <input
-                  inputMode="numeric"
+                    inputMode="numeric"
                     type="number"
                     placeholder="Quantity"
                     value={item.quantity}
@@ -208,7 +272,7 @@ resetForm();
                     className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-1.5"
                   />
                   <input
-                  inputMode="numeric"
+                    inputMode="numeric"
                     type="number"
                     placeholder="Price"
                     value={item.price}
