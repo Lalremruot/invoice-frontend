@@ -44,7 +44,7 @@ const InvoicePage = () => {
           </p>
         </div>
       </div>
-      <div className="flex justify-between w-full pt-8">
+      <div className="flex justify-between w-full pt-2">
         <div className="py-3">
           <h2 className="font-medium font-mono text-gray-500 pb-4 flex justify-start">
             FROM
@@ -69,23 +69,23 @@ const InvoicePage = () => {
         </div>
       </div>
 
-      <div className="pt-5">
+      <div className="">
         <div className="overflow-x-hidden">
           {" "}
           {/* prevent horizontal scroll */}
           <table className="min-w-full table-auto border-gray-300 md:table-fixed">
             <thead>
-              <tr>
-                <th className="border-b text-md font-mono border-gray-300 font-medium py-4 px-2 text-start w-20">
+              <tr className="bg-gray-100">
+                <th className="border-b text-sm font-mono border-gray-300 font-medium py-3 px-2 text-start w-24">
                   SL NO.
                 </th>
-                <th className="border-b text-md font-mono border-gray-300 font-medium py-4 px-2 text-start max-w-[150px] break-words whitespace-normal">
+                <th className="border-b text-sm font-mono border-gray-300 font-medium py-3 px-2 text-start max-w-[150px] break-words whitespace-normal">
                   DESCRIPTION
                 </th>
-                <th className="border-b text-md font-mono border-gray-300 font-medium py-4 px-2 text-start w-20">
+                <th className="border-b text-sm font-mono border-gray-300 font-medium py-3 px-2 text-start w-20">
                   QUANTITY
                 </th>
-                <th className="border-b text-md font-mono border-gray-300 font-medium py-4 px-2 text-start w-20">
+                <th className="border-b text-sm font-mono border-gray-300 font-medium py-3 px-2 text-start w-20">
                   PRICE
                 </th>
               </tr>
@@ -94,16 +94,16 @@ const InvoicePage = () => {
               {invoiceData.items &&
                 invoiceData.items.map((item, index) => (
                   <tr key={index}>
-                    <td className="border-b text-sm font-mono border-gray-300 py-4 px-2">
+                    <td className="border-b text-sm font-mono border-gray-300 py-3 px-2">
                       {index + 1}
                     </td>
-                    <td className="border-b text-sm font-mono border-gray-300 py-4 px-2 max-w-[150px] break-words whitespace-normal">
+                    <td className="border-b text-sm font-mono border-gray-300 py-3 px-2 max-w-[150px] break-words whitespace-normal">
                       {item.itemName}
                     </td>
-                    <td className="border-b text-sm font-mono border-gray-300 py-4 px-2">
+                    <td className="border-b text-sm font-mono border-gray-300 py-3 px-2">
                       {item.quantity}
                     </td>
-                    <td className="border-b text-sm font-mono border-gray-300 py-4 px-2">
+                    <td className="border-b text-sm font-mono border-gray-300 py-3 px-2">
                       {item.price}
                     </td>
                   </tr>
@@ -112,21 +112,21 @@ const InvoicePage = () => {
           </table>
         </div>
 
-        <div className="flex justify-end w-full pt-8">
+        <div className="flex justify-end w-full pt-4">
           <div className="flex w-full items-center flex-col justify-between">
-            <div className="py-3 flex items-center gap-20 justify-between w-full">
+            <div className="py-2 flex items-center gap-20 justify-between w-full">
               <h2 className="font-normal text-gray-700 font-mono">
                 Material Cost
               </h2>
               <p>₹{invoiceData.materialCost}</p>
             </div>
-            <div className="py-3 flex items-center gap-20 justify-between w-full">
+            <div className="py-2 flex items-center gap-20 justify-between w-full">
               <h2 className="font-normal text-gray-700 font-mono">
                 Labour Cost
               </h2>
               <p>₹{invoiceData.labourCost}</p>
             </div>
-            <div className="py-3 flex items-center gap-20 justify-between w-full">
+            <div className="pt-6 border-t border-gray-300 flex items-center gap-20 justify-between w-full">
               <h2 className="font-normal text-gray-700 font-mono">Subtotal</h2>
               <p>₹{invoiceData.totalAmount}</p>
             </div>
@@ -135,21 +135,21 @@ const InvoicePage = () => {
               <p>₹{invoiceData.tax}</p>
             </div> */}
             <div className="py-3 flex items-center gap-20 justify-between w-full border-b border-gray-300">
-              <h2 className="font-semibold text-gray-800 font-mono">Total</h2>
-              <p className="font-semibold text-gray-800 font-mono">
+              <h2 className="font-bold text-gray-800 font-mono">Total</h2>
+              <p className="font-bold text-gray-800 font-mono">
                 ₹
-                {(parseFloat(invoiceData.totalAmount) || 0) +
+                 {(parseFloat(invoiceData.totalAmount) || 0) +
                   (parseFloat(invoiceData.materialCost) || 0) +
                   (parseFloat(invoiceData.labourCost) || 0)}
               </p>
             </div>
           </div>
         </div>
-        <div className="flex flex-col text-center justify-center w-full pt-8 border-b border-gray-300 py-2">
+        <div className="flex flex-col text-center justify-center w-full pt-8 py-2">
           {/* <h2 className="font-semibold font-mono">Terms</h2> */}
           <p className="font-mono">Thank you for your business</p>
         </div>
-        <div className="flex justify-center w-full py-6">
+        <div className="flex justify-center w-full py-2">
           <button
             onClick={() => window.print()}
             className="print-hidden bg-violet-600 font-mono hover:bg-violet-700 w-full text-center transition text-white py-2 px-6 rounded-xl gap-2 text-lg shadow-lg"
