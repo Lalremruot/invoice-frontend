@@ -6,3 +6,9 @@ body {
   font-family: "Poppins", sans-serif;
   box-sizing: border-box;
 }
+
+@media print {
+  .print-hidden {
+    display: none !important;
+  }
+}

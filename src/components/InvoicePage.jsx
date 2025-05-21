@@ -31,11 +31,16 @@ const InvoicePage = () => {
           </h1>
         </div>
         <div className="flex flex-col items-start justify-center">
-          <p className="text-sm font-mono md:text-xl text-gray-600">Invoice no.- <br/>{invoiceData.invoiceNumber}</p>
+          <p className="text-sm font-mono md:text-xl text-gray-600">
+            Invoice no.- <br />
+            {invoiceData.invoiceNumber}
+          </p>
           <p className="mt-4 font-mono text-sm md:text-xl text-gray-600">
             Date:{" "}
             {invoiceData?.date &&
-              new Date(invoiceData.date).toLocaleDateString()}
+              new Date(invoiceData.date)
+                .toLocaleDateString("en-GB")
+                .replaceAll("/", "-")}
           </p>
         </div>
       </div>
@@ -65,39 +70,34 @@ const InvoicePage = () => {
       </div>
 
       <div className="pt-5">
-        <table className="w-full border-collapse border-t border-gray-300">
-          <thead>
-            <tr>
-              <th className="border-b font-mono border-gray-300 font-medium p-2 text-start">
-                SL NO.
-              </th>
-              <th className="border-b font-mono border-gray-300 font-medium p-2 text-start">
-                DESCRIPTION
-              </th>
-              <th className="border-b font-mono border-gray-300 font-medium p-2 text-start">
-                QUANTITY
-              </th>
-              <th className="border-b font-mono border-gray-300 font-medium p-2 text-start">
-                PRICE
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {invoiceData.items &&
-              invoiceData.items.map((item, index) => (
-                <tr key={index}>
-                  <td className="border-b font-mono border-gray-300 p-2">{index + 1}</td>
-                  <td className="border-b font-mono border-gray-300 p-2">
-                    {item.itemName}
-                  </td>
-                  <td className="border-b font-mono border-gray-300 p-2">
-                    {item.quantity}
-                  </td>
-                  <td className="border-b font-mono border-gray-300 p-2">{item.price}</td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
+        <div className="overflow-x-hidden"> {/* prevent horizontal scroll */}
+  <table className="min-w-full table-auto border-gray-300 md:table-fixed">
+    <thead>
+      <tr>
+        <th className="border-b text-md font-mono border-gray-300 font-medium py-4 px-2 text-start w-20">SL NO.</th>
+        <th className="border-b text-md font-mono border-gray-300 font-medium py-4 px-2 text-start max-w-[150px] break-words whitespace-normal">
+          DESCRIPTION
+        </th>
+        <th className="border-b text-md font-mono border-gray-300 font-medium py-4 px-2 text-start w-20">QUANTITY</th>
+        <th className="border-b text-md font-mono border-gray-300 font-medium py-4 px-2 text-start w-20">PRICE</th>
+      </tr>
+    </thead>
+    <tbody>
+      {invoiceData.items &&
+        invoiceData.items.map((item, index) => (
+          <tr key={index}>
+            <td className="border-b text-sm font-mono border-gray-300 py-4 px-2">{index + 1}</td>
+            <td className="border-b text-sm font-mono border-gray-300 py-4 px-2 max-w-[150px] break-words whitespace-normal">
+              {item.itemName}
+            </td>
+            <td className="border-b text-sm font-mono border-gray-300 py-4 px-2">{item.quantity}</td>
+            <td className="border-b text-sm font-mono border-gray-300 py-4 px-2">{item.price}</td>
+          </tr>
+        ))}
+    </tbody>
+  </table>
+</div>
+
 
         <div className="flex justify-end w-full pt-8">
           <div className="flex w-full items-center flex-col justify-between">
@@ -105,10 +105,10 @@ const InvoicePage = () => {
               <h2 className="font-normal text-gray-700 font-mono">Subtotal</h2>
               <p>₹{invoiceData.totalAmount}</p>
             </div>
-            <div className="py-3 flex items-center gap-20 justify-between w-full border-b border-gray-300">
+            {/* <div className="py-3 flex items-center gap-20 justify-between w-full border-b border-gray-300">
               <h2 className="font-normal text-gray-700 font-mono">Tax(%)</h2>
               <p>₹{invoiceData.tax}</p>
-            </div>
+            </div> */}
             <div className="py-3 flex items-center gap-20 justify-between w-full border-b border-gray-300">
               <h2 className="font-semibold text-gray-800 font-mono">Total</h2>
               <p className="font-semibold text-gray-800 font-mono">
@@ -118,13 +118,13 @@ const InvoicePage = () => {
           </div>
         </div>
         <div className="flex flex-col text-center justify-center w-full pt-8 border-b border-gray-300 py-2">
-          <h2 className="font-semibold font-mono">Terms</h2>
-          <p>Thank you for your business !</p>
+          {/* <h2 className="font-semibold font-mono">Terms</h2> */}
+          <p className="font-mono">Thank you for your business</p>
         </div>
         <div className="flex justify-center w-full py-6">
           <button
             onClick={() => window.print()}
-            className="bg-violet-600 font-mono hover:bg-violet-700 w-full text-center transition text-white py-2 px-6 rounded-xl gap-2 text-lg shadow-lg"
+            className="print-hidden bg-violet-600 font-mono hover:bg-violet-700 w-full text-center transition text-white py-2 px-6 rounded-xl gap-2 text-lg shadow-lg"
           >
             Print Invoice
           </button>

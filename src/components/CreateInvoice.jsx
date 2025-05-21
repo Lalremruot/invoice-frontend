@@ -23,6 +23,28 @@ const CreateInvoice = () => {
     totalAmount: 0,
     due: "",
   });
+
+  const resetForm = () => {
+  setFormData({
+    shopName: "",
+    contactNumber: "",
+    shopAddress: "",
+    customerName: "",
+    customerPhone: "",
+    items: [
+      {
+        itemName: "",
+        quantity: "",
+        price: "",
+      },
+    ],
+    tax: "",
+    totalAmount: 0,
+    due: "",
+  });
+};
+
+
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -40,8 +62,8 @@ const CreateInvoice = () => {
     return items.reduce((total, item) => {
       const price = parseFloat(item.price) || 0;
       const quantity = parseFloat(item.quantity) || 0;
-      const tax = parseFloat(item.tax) || 0;
-      return total + price + tax * quantity;
+      // const tax = parseFloat(item.tax) || 0;
+      return total + price * quantity;
     }, 0);
   };
 
@@ -64,7 +86,7 @@ const handleSubmit = async (e) => {
   try {
     const response = await axios.post(`${BASE_API}/api/invoice`, formData);
     console.log("Invoice created successfully:", response.data);
-
+resetForm();
     if (response) {
       toast.success("Invoice created successfully", { autoClose: 1200 });
       setTimeout(() => {
@@ -88,7 +110,7 @@ const handleSubmit = async (e) => {
         </h2>
         <form
           onSubmit={handleSubmit}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 gap-3"
         >
           {/* Shop Info */}
           <div className="flex flex-col gap-1">
@@ -99,19 +121,20 @@ const handleSubmit = async (e) => {
               onChange={(e) =>
                 setFormData({ ...formData, shopName: e.target.value })
               }
-              className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-2 w-full"
+              className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-1.5 w-full"
             />
           </div>
 
           <div className="flex flex-col gap-1">
             <label>Contact Number</label>
             <input
+            inputMode="numeric"
               type="text"
               value={formData.contactNumber}
               onChange={(e) =>
                 setFormData({ ...formData, contactNumber: e.target.value })
               }
-              className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-2 w-full"
+              className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-1.5 w-full"
             />
           </div>
 
@@ -123,7 +146,7 @@ const handleSubmit = async (e) => {
               onChange={(e) =>
                 setFormData({ ...formData, shopAddress: e.target.value })
               }
-              className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-2 w-full"
+              className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-1.5 w-full"
             />
           </div>
 
@@ -136,7 +159,7 @@ const handleSubmit = async (e) => {
               onChange={(e) =>
                 setFormData({ ...formData, customerName: e.target.value })
               }
-              className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-2 w-full"
+              className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-1.5 w-full"
             />
           </div>
 
@@ -152,7 +175,7 @@ const handleSubmit = async (e) => {
               onChange={(e) =>
                 setFormData({ ...formData, customerPhone: e.target.value })
               }
-              className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-2 w-full"
+              className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-1.5 w-full"
             />
           </div>
 
@@ -172,25 +195,27 @@ const handleSubmit = async (e) => {
                     onChange={(e) =>
                       handleItemChange(index, "itemName", e.target.value)
                     }
-                    className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-2"
+                    className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-1.5"
                   />
                   <input
+                  inputMode="numeric"
                     type="number"
                     placeholder="Quantity"
                     value={item.quantity}
                     onChange={(e) =>
                       handleItemChange(index, "quantity", e.target.value)
                     }
-                    className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-2"
+                    className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-1.5"
                   />
                   <input
+                  inputMode="numeric"
                     type="number"
                     placeholder="Price"
                     value={item.price}
                     onChange={(e) =>
                       handleItemChange(index, "price", e.target.value)
                     }
-                    className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-2"
+                    className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-1.5"
                   />
                 </div>
                 <div className="flex w-full justify-end items-end">
@@ -207,7 +232,7 @@ const handleSubmit = async (e) => {
           </div>
 
           {/* Tax, Total, Due */}
-          <div className="flex flex-col gap-1">
+          {/* <div className="flex flex-col gap-1">
             <label>
               Tax{" "}
               <span className="text-red-500 italic text-sm">(optional)</span>
@@ -218,9 +243,9 @@ const handleSubmit = async (e) => {
               onChange={(e) =>
                 setFormData({ ...formData, tax: e.target.value })
               }
-              className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-2"
+              className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-1.5"
             />
-          </div>
+          </div> */}
 
           <div className="flex flex-col gap-1">
             <label>Total Amount </label>
@@ -228,11 +253,11 @@ const handleSubmit = async (e) => {
               type="number"
               value={formData.totalAmount}
               readOnly
-              className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-2 bg-gray-100"
+              className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-1.5 bg-gray-100"
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          {/* <div className="flex flex-col gap-1">
             <label>
               Due <span className="text-red-500 italic text-sm">(if any)</span>
             </label>
@@ -242,9 +267,9 @@ const handleSubmit = async (e) => {
               onChange={(e) =>
                 setFormData({ ...formData, due: e.target.value })
               }
-              className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-2"
+              className="border outline-none focus:border-violet-600 border-gray-300 rounded-md p-1.5"
             />
-          </div>
+          </div> */}
 
           <div className="md:col-span-2">
             <button
